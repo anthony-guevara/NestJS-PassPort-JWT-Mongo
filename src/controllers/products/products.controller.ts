@@ -14,6 +14,7 @@ import {
 import { Product } from 'src/entities/product.entity';
 import { ParseIntPipe } from './../../common/parse-int.pipe';
 import { ProductsService } from './../../services/products/products.service';
+import { CreateProductDto, UpdateProductDto } from './../../dto/products.dto';
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
@@ -37,12 +38,12 @@ export class ProductsController {
   }
 
   @Post()
-  create(@Body() payload: any) {
+  create(@Body() payload: CreateProductDto) {
     return this.productsService.create(payload);
   }
 
   @Put('/:id')
-  updateOne(@Param('id') id: number, @Body() payload: any) {
+  updateOne(@Param('id') id: number, @Body() payload: UpdateProductDto) {
     return this.productsService.update(+id, payload);
   }
 }
