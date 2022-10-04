@@ -9,10 +9,10 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  ParseIntPipe,
+  //ParseIntPipe,
 } from '@nestjs/common';
 import { Product } from 'src/entities/product.entity';
-
+import { ParseIntPipe } from './../../common/parse-int.pipe';
 import { ProductsService } from './../../services/products/products.service';
 @Controller('products')
 export class ProductsController {
