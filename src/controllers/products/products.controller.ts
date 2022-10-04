@@ -7,34 +7,42 @@ import {
   Body,
   Put,
   Delete,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
+import { Product } from 'src/entities/product.entity';
 
+import { ProductsService } from './../../services/products/products.service';
 @Controller('products')
 export class ProductsController {
+  constructor(private productsService: ProductsService) {}
+
   @Get('/filter')
   getByFilter(): string {
     return 'Ruta de en duro se ponen antes de rutas dinamicas';
   }
 
   @Get('/:productId')
-  /**
-   * The function getOne() takes a parameter called productId, which is of type any. The function
-   * returns a string
-   * @param {any} productId - The name of the parameter in the URL.
-   * @returns A string with the productId
-   */
-  getOne(@Param('productId') productId: any): string {
-    return 'El producto buscado es:' + productId;
+  @HttpCode(HttpStatus.ACCEPTED)
+  getOne(@Param('productId', ParseIntPipe) productId: number): Product {
+    return this.productsService.finOne(productId);
   }
 
   @Get('/')
-  get(@Query('limit') limit = 100, @Query('offset') offset: number): string {
+  get(): // @Query('limit') limit = 100, @Query('offset') offset: number
+  Product[] {
     // const { limit, offset } = params; // ES6 destructuring
-    return `El limite es=> ${typeof limit} y el offset es: ${typeof offset}`;
+    return this.productsService.findAll();
   }
 
   @Post()
   create(@Body() payload: any) {
-    return { message: 'El producto se creo correctamente', payload };
+    return this.productsService.create(payload);
+  }
+
+  @Put('/:id')
+  updateOne(@Param('id') id: number, @Body() payload: any) {
+    return this.productsService.update(+id, payload);
   }
 }
