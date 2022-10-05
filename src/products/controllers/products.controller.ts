@@ -11,10 +11,10 @@ import {
   HttpStatus,
   //ParseIntPipe,
 } from '@nestjs/common';
-import { Product } from 'src/entities/product.entity';
-import { ParseIntPipe } from './../../common/parse-int.pipe';
-import { ProductsService } from './../../services/products/products.service';
-import { CreateProductDto, UpdateProductDto } from './../../dto/products.dto';
+import { Product } from 'src/products/entities/product.entity';
+import { ParseIntPipe } from '../../common/parse-int.pipe';
+import { ProductsService } from '../services/products.service';
+import { CreateProductDto, UpdateProductDto } from '../dtos/products.dto';
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
