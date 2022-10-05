@@ -4,7 +4,7 @@ import { CreateProductDto, UpdateProductDto } from './../../dto/products.dto';
 
 @Injectable()
 export class ProductsService {
-  private counterId = 1;
+  private counterId = 2;
   private products: Product[] = [
     {
       id: 1,
