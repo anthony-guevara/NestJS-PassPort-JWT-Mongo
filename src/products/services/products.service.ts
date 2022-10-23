@@ -31,7 +31,6 @@ export class ProductsService {
   finOne(id: number): Product {
     const product = this.products.find((item) => item.id === id);
     if (!product) {
-      //null;
       throw new NotFoundException(`Product with id ${id} does not exist`);
     }
     return product;

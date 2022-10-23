@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { enviroments } from './enviroments';
+import config from './config';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { enviroments } from './enviroments';
     ConfigModule.forRoot({
       //configuracion de variables de entorno
       envFilePath: enviroments[process.env.NODE_ENV] || '.env',
+      load: [config],
       isGlobal: true,
     }),
   ],
@@ -25,7 +27,7 @@ import { enviroments } from './enviroments';
   providers: [
     AppService,
     {
-      provide: 'TASKS', //se pueden usar para conecciones a base de datos, detiene el inciio
+      provide: 'TASKS', //se pueden usar para conecciones a base de datos, detiene el incio de la aplicacion hasta que se resuelva la promesa
       useFactory: async (http: HttpService) => {
         const tasks = await http.get(
           'https://jsonplaceholder.typicode.com/todos',
