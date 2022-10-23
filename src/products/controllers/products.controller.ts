@@ -11,10 +11,12 @@ import {
   HttpStatus,
   //ParseIntPipe,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { Product } from 'src/products/entities/product.entity';
 import { ParseIntPipe } from '../../common/parse-int.pipe';
 import { ProductsService } from '../services/products.service';
 import { CreateProductDto, UpdateProductDto } from '../dtos/products.dto';
+@ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
@@ -29,7 +31,7 @@ export class ProductsController {
   getOne(@Param('productId', ParseIntPipe) productId: number): Product {
     return this.productsService.finOne(productId);
   }
-
+  @ApiOperation({ summary: 'A list  of products' })
   @Get('/')
   get(): // @Query('limit') limit = 100, @Query('offset') offset: number
   Product[] {
