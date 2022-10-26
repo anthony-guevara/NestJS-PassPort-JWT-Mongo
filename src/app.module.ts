@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
+import { MongoClient } from 'mongodb';
 
 import { enviroments } from './enviroments';
 import config from './config';
