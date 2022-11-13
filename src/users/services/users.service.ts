@@ -37,4 +37,13 @@ export class UsersService {
       products: this.productsService.findAll(),
     };
   }
+
+  async getOrdersByUser(id: number) {
+    const user = this.findOne(id);
+    return {
+      date: new Date(),
+      user,
+      products: this.productsService.findAll(),
+    };
+  }
 }

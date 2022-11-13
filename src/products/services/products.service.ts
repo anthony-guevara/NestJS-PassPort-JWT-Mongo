@@ -1,59 +1,51 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { Product } from '../entities/product.entity';
 import { CreateProductDto, UpdateProductDto } from '../dtos/products.dto';
 
 @Injectable()
 export class ProductsService {
-  private counterId = 2;
-  private products: Product[] = [
-    {
-      id: 1,
-      name: 'Product 1',
-      description: 'Description 1',
-      price: 1000,
-      stock: 50,
-      image: 'https://picsum.photos/200/300',
-    },
-    {
-      id: 2,
-      name: 'Product 2',
-      description: 'Description 2',
-      price: 55.54,
-      stock: 75,
-      image: 'https://picsum.photos/200/300',
-    },
-  ];
+  constructor(
+    @InjectModel(Product.name) private productModel: Model<Product>,
+  ) {}
 
-  findAll(): Product[] {
-    return this.products;
+  async findAll() {
+    return await this.productModel.find().exec();
   }
-
-  finOne(id: number): Product {
-    const product = this.products.find((item) => item.id === id);
+  async findOne(id: string) {
+    const product = await this.productModel.findById(id).exec();
     if (!product) {
       throw new NotFoundException(`Product with id ${id} does not exist`);
     }
     return product;
   }
 
-  create(payload: CreateProductDto) {
-    this.counterId += 1;
-    const newProduct: Product = {
-      id: this.counterId,
-      ...payload,
-    };
+  async create(data: CreateProductDto) {
+    const newProduct = new this.productModel(data);
 
-    this.products.push(newProduct);
+    return await newProduct.save();
   }
 
-  update(id: number, payload: UpdateProductDto) {
-    const product = this.finOne(id);
-    if (product) {
-      const index = this.products.findIndex((item) => item.id === id);
-      this.products[index] = { ...product, ...payload };
+  async update(id: string, changes: UpdateProductDto) {
+    const product = await this.productModel
+      .findByIdAndUpdate(
+        id,
+        {
+          $set: changes, // solo se actualizan los campos que se pasan
+        },
+        { new: true }, // para que devuelva el producto actualizado
+      )
+      .exec();
 
-      return this.products[index];
+    if (!product) {
+      throw new NotFoundException(`Product with id ${id} does not exist`);
     }
-    return null;
+
+    return product;
+  }
+
+  async remove(id: string) {
+    return await this.productModel.findByIdAndDelete(id).exec();
   }
 }

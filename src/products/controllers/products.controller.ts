@@ -28,13 +28,13 @@ export class ProductsController {
 
   @Get('/:productId')
   @HttpCode(HttpStatus.ACCEPTED)
-  getOne(@Param('productId', ParseIntPipe) productId: number): Product {
-    return this.productsService.finOne(productId);
+  getOne(@Param('productId') productId: string): any {
+    return this.productsService.findOne(productId);
   }
   @ApiOperation({ summary: 'A list  of products' })
   @Get('/')
   get(): // @Query('limit') limit = 100, @Query('offset') offset: number
-  Product[] {
+  any {
     // const { limit, offset } = params; // ES6 destructuring
     return this.productsService.findAll();
   }
@@ -45,7 +45,12 @@ export class ProductsController {
   }
 
   @Put('/:id')
-  updateOne(@Param('id') id: number, @Body() payload: UpdateProductDto) {
-    return this.productsService.update(+id, payload);
+  updateOne(@Param('id') id: string, @Body() payload: UpdateProductDto) {
+    return this.productsService.update(id, payload);
+  }
+
+  @Delete('/:id')
+  delete(@Param('id') id: string) {
+    return this.productsService.remove(id);
   }
 }
