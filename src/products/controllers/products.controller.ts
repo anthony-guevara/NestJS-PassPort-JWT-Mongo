@@ -15,7 +15,11 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { Product } from 'src/products/entities/product.entity';
 import { ParseIntPipe } from '../../common/parse-int.pipe';
 import { ProductsService } from '../services/products.service';
-import { CreateProductDto, UpdateProductDto } from '../dtos/products.dto';
+import {
+  CreateProductDto,
+  UpdateProductDto,
+  FilterProductsDto,
+} from '../dtos/products.dto';
 
 //custom pipe
 import { MongoIdPipe } from './../../common/mongo-id.pipe';
@@ -34,12 +38,12 @@ export class ProductsController {
   getOne(@Param('productId', MongoIdPipe) productId: string): any {
     return this.productsService.findOne(productId);
   }
-  @ApiOperation({ summary: 'A list  of products' })
+
   @Get('/')
-  get(): // @Query('limit') limit = 100, @Query('offset') offset: number
-  any {
-    // const { limit, offset } = params; // ES6 destructuring
-    return this.productsService.findAll();
+  @ApiOperation({ summary: 'A list  of products' })
+  getProducts(@Query() params: FilterProductsDto) {
+    //const { limit, offset } = params; // ES6 destructuring
+    return this.productsService.findAll(params);
   }
 
   @Post()
