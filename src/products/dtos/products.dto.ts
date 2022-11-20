@@ -12,6 +12,7 @@ import {
   ValidateIf,
   ValidateNested,
   isNotEmpty,
+  IsMongoId,
 } from 'class-validator';
 
 import { PartialType, ApiProperty } from '@nestjs/swagger';
@@ -50,6 +51,10 @@ export class CreateProductDto {
   @ValidateNested()
   @IsNotEmpty()
   readonly category: CreateCategoryDto;
+
+  @IsMongoId()
+  @IsNotEmpty()
+  readonly brand: string;
 }
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {} //Las mismas validaciones pero con campos opcionales
