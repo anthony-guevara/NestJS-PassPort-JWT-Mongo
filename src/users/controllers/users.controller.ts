@@ -1,50 +1,57 @@
 import {
   Controller,
   Get,
+  Param,
   Post,
   Body,
-  Patch,
-  Param,
+  Put,
   Delete,
-  ParseIntPipe,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { UsersService } from '../services/users.service';
-import { CreateUserDto } from '../dto/user.dto';
-import { UpdateUserDto } from '../dto/user.dto';
+import { CreateUserDto, UpdateUserDto } from '../dto/user.dto';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
-
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
+  constructor(private usersService: UsersService) {}
 
   @Get()
+  @ApiOperation({
+    summary: 'List of users',
+  })
   findAll() {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @Get('tasks')
+  tasks() {
+    return this.usersService.getTasks();
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @Get(':id')
+  get(@Param('id') id: string) {
+    return this.usersService.findOne(id);
+  }
+
+  @Get(':id/orders')
+  getOrders(@Param('id') id: string) {
+    return this.usersService.getOrdersByUser(id);
+  }
+
+  @Post()
+  create(@Body() payload: CreateUserDto) {
+    return this.usersService.create(payload);
+  }
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() payload: UpdateUserDto) {
+    return this.usersService.update(id, payload);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
-  }
-
-  @Get(':id/orders')
-  getOrdersByUser(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findOneByUser(id);
+    return this.usersService.remove(id);
   }
 }

@@ -13,11 +13,15 @@ import {
   ValidateNested,
   isNotEmpty,
   IsMongoId,
+  IsArray,
 } from 'class-validator';
 
 import { PartialType, ApiProperty } from '@nestjs/swagger';
 
 import { CreateCategoryDto } from './category.dtos';
+import { Type } from 'class-transformer';
+
+import { CreateSubDocDto } from './sub-doc.dto';
 export class CreateProductDto {
   @ApiProperty({
     description: 'The name of the product',
@@ -55,6 +59,16 @@ export class CreateProductDto {
   @IsMongoId()
   @IsNotEmpty()
   readonly brand: string;
+
+  @IsNotEmpty()
+  @ValidateNested()
+  readonly subDoc: CreateSubDocDto; // 👈 1:1
+
+  @IsNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateSubDocDto)
+  readonly subDocs: CreateSubDocDto[]; // 👈 1:N
 }
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {} //Las mismas validaciones pero con campos opcionales
